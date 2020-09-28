@@ -10,7 +10,7 @@ I modified and add a script 'resource_logger.py' into the original package from 
 ```
 $ pip install psutil
 $ sudo -H pip install -U jetson-stats
-$ git clone 
+$ git clone https://github.com/zinuok/log_resource.git
 ```
 
 ## Run
