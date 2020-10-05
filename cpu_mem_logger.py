@@ -4,7 +4,7 @@
 # ------------------------------------------------------------------------------------------------------ #
 # written by zinuok (https://github.com/zinuok)
 # calculate CPU, memory usage of processes in proc_list. If you also want to log the GPU usage, 
-# use 
+# use jetson_stats/examples/resource_logger.py
 # ref: https://thispointer.com/python-get-list-of-all-running-processes-and-sort-by-highest-memory-usage/
 # ------------------------------------------------------------------------------------------------------ #
 
