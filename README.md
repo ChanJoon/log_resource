@@ -19,6 +19,6 @@ $ git clone https://github.com/zinuok/log_resource.git
 ## Run
 ```
 $ cd ~/jetson_stats/examples
-$ python resource_logger.py --name [output csv file name]
+$ python resource_logger.py --name [vo algorithm name] --save [output csv file name]
 ```
 
