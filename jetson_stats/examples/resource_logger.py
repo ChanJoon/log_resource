@@ -1,12 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-
-# ------------------------------------------------------------------------------------------------------#
-# modified by zinuok, (https://github.com/zinuok)
-# ref: https://thispointer.com/python-get-list-of-all-running-processes-and-sort-by-highest-memory-usage/
-# calculate the usage of CPU, memory, GPU usage of processes in proc_list
-# ------------------------------------------------------------------------------------------------------#
-
 # This file is part of the jetson_stats package (https://github.com/rbonghi/jetson_stats or http://rnext.it).
 # Copyright (c) 2019 Raffaello Bonghi.
 #
@@ -25,7 +18,7 @@
 
 
 
-
+# ref: https://thispointer.com/python-get-list-of-all-running-processes-and-sort-by-highest-memory-usage/
 from jtop import jtop, JtopException
 import csv, argparse
 import psutil
@@ -41,17 +34,32 @@ from time import sleep
 # orb2-ros     : ['orb_slam2_ros_s'] 
 
                                  
-proc_list = ['vins_estimator', 'feature_tracker', 'pose_graph'] # vins-mono 
 interval = 0.1           # time interval for each logging
 # --------------------------- #
 
+def get_proc(vo_name):
+    if vo_name == "vins-mono":
+        return ['vins_estimator', 'feature_tracker', 'pose_graph']
+    if vo_name == "vins-fusion":
+        return ['vins_node', 'loop_fusion_nod']
+    if vo_name == "rovio":
+        return ['rovio_node'] 
+    if vo_name == "msckf-vio":
+        return ['nodelet']
+    if vo_name == "orb2-ros":
+        return ['orb_slam2_ros_s'] 
+    if vo_name == "kimera":
+        return []
 
 if __name__ == "__main__":
     # parse output file name
     parser = argparse.ArgumentParser()
     parser.add_argument('--save', action="store", dest="file", default="log.csv")
+    parser.add_argument('--name', action="store", dest="vo", default="")
     args = parser.parse_args()
     
+    proc_list = get_proc(args.vo)
+    print proc_list
     f = open(args.file, 'w')
     wr = csv.writer(f)
     wr.writerow(['CPU %', 'Mem %', 'GPU %'])
