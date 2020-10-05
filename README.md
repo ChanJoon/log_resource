@@ -3,10 +3,10 @@
 ***
 This is python script logs CPU, Memory, and GPU usage for NVIDIA Jetson board. <br>
 There are two files for logging the usages
-+ cpu_mem_logger.py: total CPU usage and Memory usage for specified processes are logged
-+ jetson_stats/examples/resource_logger.py: total CPU usage and Memory usage for specified processes  and total GPU usage are logged <br>total CPU usage and Memory usage for specified processes are logged
++ **cpu_mem_logger.py:** total **CPU, Memory** usage for specified processes are logged
++ **jetson_stats/examples/resource_logger.py:** total **CPU, Memory, GPU** usage for specified processes are logged 
 <br>
-For second script, I modified and add a script 'resource_logger.py' into the original package from [jetson_stats]("https://github.com/rbonghi/jetson_stats")
+For second script, I modified and add a script 'resource_logger.py' from the original package from [jetson_stats]("https://github.com/rbonghi/jetson_stats")
 ***
 <br><br>
 
