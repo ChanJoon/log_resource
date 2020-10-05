@@ -28,7 +28,7 @@ from time import sleep
 # process name list: used for total calculation
 # example)
 # vins-mono    : ['vins_estimator', 'feature_tracker', 'pose_graph']
-# vins-fusion    : ['vins_node', 'loop_fusion_nod']
+# vins-fusion    : ['vins_node', 'loop_fusion_node']
 # rovio        : ['rovio_node'] 
 # msckf-vio    : ['nodelet'] 
 # orb2-ros     : ['orb_slam2_ros_stereo'] 
@@ -41,13 +41,13 @@ def get_proc(vo_name):
     if vo_name == "vins-mono":
         return ['vins_estimator', 'feature_tracker', 'pose_graph']
     if vo_name == "vins-fusion":
-        return ['vins_node', 'loop_fusion_nod']
+        return ['vins_node', 'loop_fusion_node']
     if vo_name == "rovio":
         return ['rovio_node'] 
     if vo_name == "msckf-vio":
         return ['nodelet']
     if vo_name == "orb2-ros":
-        return ['orb_slam2_ros_s'] 
+        return ['orb_slam2_ros_stereo'] 
     if vo_name == "kimera":
         return []
 
@@ -75,6 +75,7 @@ if __name__ == "__main__":
                     try:
                         # Get process info.
                         info = proc.as_dict(attrs=['name', 'cpu_percent', 'memory_percent'])
+                        #print (info['name'])
                         if info['name'] in proc_list:
                             # calculate total CPU and Memory usage
                             total_cpu += info['cpu_percent']
