@@ -17,6 +17,7 @@ $ git clone https://github.com/zinuok/log_resource.git
 ```
 
 ## Run
++ 'vo algorithm name' list: vins-mono, vins-fusion, rovio, msckf-vio, orb2-ros
 ```
 $ cd ~/jetson_stats/examples
 $ python resource_logger.py --name [vo algorithm name] --save [output csv file name]
