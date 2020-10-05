@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
+
+# ------------------------------------------------------------------------------------------------------#
+# modified by zinuok, (https://github.com/zinuok)
+# ref: https://thispointer.com/python-get-list-of-all-running-processes-and-sort-by-highest-memory-usage/
+# calculate the usage of CPU, memory, GPU usage of processes in proc_list
+# ------------------------------------------------------------------------------------------------------#
+
 # This file is part of the jetson_stats package (https://github.com/rbonghi/jetson_stats or http://rnext.it).
 # Copyright (c) 2019 Raffaello Bonghi.
 #
@@ -18,7 +25,7 @@
 
 
 
-# ref: https://thispointer.com/python-get-list-of-all-running-processes-and-sort-by-highest-memory-usage/
+
 from jtop import jtop, JtopException
 import csv, argparse
 import psutil
