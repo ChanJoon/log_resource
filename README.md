@@ -8,7 +8,6 @@ There are two files for logging the usages
 <br>
 For second script, I modified and add a script 'resource_logger.py' from the original package from [jetson_stats]("https://github.com/rbonghi/jetson_stats")
 ***
-<br><br>
 
 ## Install
 ```
