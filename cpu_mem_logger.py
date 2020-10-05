@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
+# ------------------------------------------------------------------------------------------------------ #
+# written by zinuok (https://github.com/zinuok)
+# calculate CPU, memory usage of processes in proc_list. If you also want to log the GPU usage, 
+# use 
 # ref: https://thispointer.com/python-get-list-of-all-running-processes-and-sort-by-highest-memory-usage/
+# ------------------------------------------------------------------------------------------------------ #
 
 import psutil
 import csv, argparse
