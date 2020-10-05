@@ -31,7 +31,7 @@ from time import sleep
 # vins-fusion    : ['vins_node', 'loop_fusion_nod']
 # rovio        : ['rovio_node'] 
 # msckf-vio    : ['nodelet'] 
-# orb2-ros     : ['orb_slam2_ros_s'] 
+# orb2-ros     : ['orb_slam2_ros_stereo'] 
 
                                  
 interval = 0.1           # time interval for each logging
