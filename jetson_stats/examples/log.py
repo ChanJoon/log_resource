@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-# modified by zinuok (https://github.com/zinuok)
+# written by zinuok (https://github.com/zinuok)
 # ref: https://thispointer.com/python-get-list-of-all-running-processes-and-sort-by-highest-memory-usage/
 # calculate CPU & memory usage of 'name' process. this is just demo file. 
 
