@@ -6,7 +6,7 @@ There are two files for logging the usages
 + **cpu_mem_logger.py:** total **CPU, Memory** usage for specified processes are logged
 + **jetson_stats/examples/resource_logger.py:** total **CPU, Memory, GPU** usage for specified processes are logged 
 
-For second script, I modified and add a script 'resource_logger.py' from the original package from [jetson_stats]("https://github.com/rbonghi/jetson_stats")
+For second script, I modified and add a script 'resource_logger.py' from the original package from [jetson_stats](https://github.com/rbonghi/jetson_stats)
 ***
 
 ## Install
