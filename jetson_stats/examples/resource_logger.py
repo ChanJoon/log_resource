@@ -56,46 +56,82 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--save', action="store", dest="file", default="log.csv")
     parser.add_argument('--name', action="store", dest="vo", default="")
+
+    # save True if arg is given
+    parser.add_argument('--USE_GPU', action="store_true", default=False)
+
     args = parser.parse_args()
     
     proc_list = get_proc(args.vo)
-    print proc_list
+    print(proc_list)
     f = open(args.file, 'w')
     wr = csv.writer(f)
-    wr.writerow(['CPU %', 'Mem %', 'GPU %'])
-    
-    try:
-        with jtop() as jetson:
-            
-            while True:
-                total_cpu = 0
-                total_mem = 0
-                # Iterate over all running process
-                for proc in psutil.process_iter():
-                    try:
-                        # Get process info.
-                        info = proc.as_dict(attrs=['name', 'cpu_percent', 'memory_percent'])
-                        #print (info['name'])
-                        if info['name'] in proc_list:
-                            # calculate total CPU and Memory usage
-                            total_cpu += info['cpu_percent']
-                            total_mem += info['memory_percent']
-                            
-                    except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-                        pass
-                    except KeyboardInterrupt:
-                        print("Crtl+'C' interrupt")
-                        close(f)
+
+    if args.USE_GPU:
+        wr.writerow(['CPU %', 'Mem %', 'GPU %'])
+        try:
+            with jtop() as jetson:
                 
-                # log
-                stats = jetson.stats # get jetson GPU usage info
-                print("cpu: ", total_cpu, "mem: ", total_mem, "gpu: ", stats['GPU'])
-                wr.writerow([total_cpu, total_mem, stats['GPU']])
-                sleep(interval)     
+                while True:
+                    total_cpu = 0
+                    total_mem = 0
+                    # Iterate over all running process
+                    for proc in psutil.process_iter():
+                        try:
+                            # Get process info.
+                            info = proc.as_dict(attrs=['name', 'cpu_percent', 'memory_percent'])
+                            #print (info['name'])
+                            if info['name'] in proc_list:
+                                # calculate total CPU and Memory usage
+                                total_cpu += info['cpu_percent']
+                                total_mem += info['memory_percent']
+                                
+                        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                            pass
+                        except KeyboardInterrupt:
+                            print("Crtl+'C' interrupt")
+                            # close(f)
+                    
+                    # log
+                    stats = jetson.stats # get jetson GPU usage info
+                    print("cpu: ", total_cpu, "mem: ", total_mem, "gpu: ", stats['GPU'])
+                    wr.writerow([total_cpu, total_mem, stats['GPU']])
+                    sleep(interval)     
+        except JtopException as e:
+            print(e)
+
+
+
+    else:
+        wr.writerow(['CPU %', 'Mem %'])
+
+        while True:
+            total_cpu = 0
+            total_mem = 0
+            # Iterate over all running process
+            for proc in psutil.process_iter():
+                try:
+                    # Get process info.
+                    info = proc.as_dict(attrs=['name', 'cpu_percent', 'memory_percent'])
+                    #print (info['name'])
+                    if info['name'] in proc_list:
+                        # calculate total CPU and Memory usage
+                        total_cpu += info['cpu_percent']
+                        total_mem += info['memory_percent']
+                        
+                except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                    pass
+                except KeyboardInterrupt:
+                    print("Crtl+'C' interrupt")
+                    # close(f)
+            
+            # log
+            print("cpu: ", total_cpu, "mem: ", total_mem)
+            wr.writerow([total_cpu, total_mem])
+            sleep(interval)  
+
+    # close file
+    f.close()
     
-    
-    except JtopException as e:
-        print(e)
-    
-    close(f)
+    # close(f)
 # EOF
