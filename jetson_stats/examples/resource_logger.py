@@ -33,9 +33,30 @@ from time import sleep
 # msckf-vio    : ['nodelet'] 
 # orb2-ros     : ['orb_slam2_ros_stereo'] 
 
+
+# 논리 프로세서(코어) 수
+num_cores = psutil.cpu_count(logical=True)
+
                                  
 interval = 0.1           # time interval for each logging
 # --------------------------- #
+
+
+
+def initialize_cpu_percent(proc_list):
+    """
+    모든 모니터링 대상 프로세스에 대해 cpu_percent을 초기화
+    """
+    for proc in psutil.process_iter(['name']):
+        if proc.info['name'] in proc_list:
+            try:
+                proc.cpu_percent(interval=None)
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                pass
+    sleep(interval)
+
+
+
 
 def get_proc(vo_name):
     if vo_name == "vins-mono":
@@ -65,6 +86,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     proc_list = get_proc(args.vo)
+    initialize_cpu_percent(proc_list)
+    
     print(proc_list)
     f = open(args.file, 'w')
     wr = csv.writer(f)
@@ -81,11 +104,15 @@ if __name__ == "__main__":
                     for proc in psutil.process_iter():
                         try:
                             # Get process info.
-                            info = proc.as_dict(attrs=['name', 'cpu_percent', 'memory_percent'])
+                            info = proc.as_dict(attrs=['name', 'cpu_percent'])
                             if info['name'] in proc_list:
                                 # calculate total CPU and Memory usage
                                 total_cpu += info['cpu_percent']
-                                total_mem += info['memory_percent']
+                        
+                                mem_rss_bytes = proc.memory_info().rss  # 여기서 직접 호출
+                                mem_rss_mb = mem_rss_bytes / (1024 * 1024)
+                                mem_rss_gb = mem_rss_mb / (1024)
+                                total_mem += mem_rss_gb
                                 
                         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                             pass
@@ -95,8 +122,12 @@ if __name__ == "__main__":
                     
                     # log
                     stats = jetson.stats # get jetson GPU usage info
-                    print("cpu: ", total_cpu, "mem: ", total_mem, "gpu: ", stats['GPU'])
-                    wr.writerow([total_cpu, total_mem, stats['GPU']])
+
+                    if total_cpu > 0:
+                        print("cpu [%]: ", total_cpu, "mem [GB]: ", total_mem, "gpu [GB]: ", stats['GPU'])
+                        wr.writerow([total_cpu, total_mem, stats['GPU']])
+                    else:
+                        print("cpu [%]: ", total_cpu, "mem []: ", total_mem, "  0(%)cpu => skip cpu logging")
                     sleep(interval)     
         except JtopException as e:
             print(e)
@@ -113,12 +144,22 @@ if __name__ == "__main__":
             for proc in psutil.process_iter():
                 try:
                     # Get process info.
-                    info = proc.as_dict(attrs=['name', 'cpu_percent', 'memory_percent'])
+                    info = proc.as_dict(attrs=['name', 'cpu_percent'])
                     # print (info['name'])
                     if info['name'] in proc_list:
                         # calculate total CPU and Memory usage
-                        total_cpu += info['cpu_percent']
-                        total_mem += info['memory_percent']
+                        cpu_usage_psutil = info['cpu_percent']
+                        
+                        print(cpu_usage_psutil, proc.cpu_percent(interval=interval))
+                        usage_per_core_scale = cpu_usage_psutil
+                        total_cpu += usage_per_core_scale
+                        
+                        
+                        mem_rss_bytes = proc.memory_info().rss  # 여기서 직접 호출
+                        mem_rss_mb = mem_rss_bytes / (1024 * 1024)
+                        mem_rss_gb = mem_rss_mb / (1024)
+                        total_mem += mem_rss_gb
+                        
                         
                 except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                     pass
@@ -128,7 +169,7 @@ if __name__ == "__main__":
             
             # log
             if total_cpu > 0:
-                print("cpu: ", total_cpu, "mem: ", total_mem)
+                print("cpu [%]: ", total_cpu, "mem [GB]: ", total_mem)
                 wr.writerow([total_cpu, total_mem])
             else:
                 print("cpu: ", total_cpu, "mem: ", total_mem, "  0(%)cpu => skip cpu logging")
