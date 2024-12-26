@@ -44,9 +44,7 @@ interval = 0.1           # time interval for each logging
 
 
 def initialize_cpu_percent(proc_list):
-    """
-    모든 모니터링 대상 프로세스에 대해 cpu_percent을 초기화
-    """
+
     for proc in psutil.process_iter(['name']):
         if proc.info['name'] in proc_list:
             try:
