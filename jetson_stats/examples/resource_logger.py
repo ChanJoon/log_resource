@@ -46,6 +46,8 @@ def get_proc(vo_name):
         return ['rovio_node'] 
     if vo_name == "msckf-vio":
         return ['nodelet']
+    if vo_name == "msckf-vio-mono":
+        return ['msckf_mono_node']
     if vo_name == "orb2-ros":
         return ['orb_slam2_ros_stereo'] 
     if vo_name == "kimera":
@@ -80,7 +82,6 @@ if __name__ == "__main__":
                         try:
                             # Get process info.
                             info = proc.as_dict(attrs=['name', 'cpu_percent', 'memory_percent'])
-                            #print (info['name'])
                             if info['name'] in proc_list:
                                 # calculate total CPU and Memory usage
                                 total_cpu += info['cpu_percent']
@@ -113,7 +114,7 @@ if __name__ == "__main__":
                 try:
                     # Get process info.
                     info = proc.as_dict(attrs=['name', 'cpu_percent', 'memory_percent'])
-                    #print (info['name'])
+                    # print (info['name'])
                     if info['name'] in proc_list:
                         # calculate total CPU and Memory usage
                         total_cpu += info['cpu_percent']
@@ -126,8 +127,11 @@ if __name__ == "__main__":
                     # close(f)
             
             # log
-            print("cpu: ", total_cpu, "mem: ", total_mem)
-            wr.writerow([total_cpu, total_mem])
+            if total_cpu > 0:
+                print("cpu: ", total_cpu, "mem: ", total_mem)
+                wr.writerow([total_cpu, total_mem])
+            else:
+                print("cpu: ", total_cpu, "mem: ", total_mem, "  0(%)cpu => skip cpu logging")
             sleep(interval)  
 
     # close file
